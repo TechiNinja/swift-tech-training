@@ -44,28 +44,28 @@ class LoginViewModel {
     func validateEmail() {
         if email.isEmpty {
             isEmailValid = false
-            delegate?.didValidateEmail(isValid: false, error: "Email is required")
+            delegate?.didValidateEmail(isValid: false, error: StringConstants.ErrorMessages.emailRequired)
             return
         }
         
         let isValid = ValidationHelper.isValidEmail(email)
         isEmailValid = isValid
         
-        let errorMessage = isValid ? nil : "Invalid email format"
+        let errorMessage = isValid ? nil : StringConstants.ErrorMessages.invalidEmail
         delegate?.didValidateEmail(isValid: isValid, error: errorMessage)
     }
     
     func validatePassword() {
         if password.isEmpty {
             isPasswordValid = false
-            delegate?.didValidatePassword(isValid: false, error: "Password is required")
+            delegate?.didValidatePassword(isValid: false, error: StringConstants.ErrorMessages.passwordRequired)
             return
         }
         
         let isValid = ValidationHelper.isValidPassword(password)
         isPasswordValid = isValid
         
-        let errorMessage = isValid ? nil : "Password must include uppercase, lowercase, number, and special character"
+        let errorMessage = isValid ? nil : StringConstants.ErrorMessages.invalidPassword
         delegate?.didValidatePassword(isValid: isValid, error: errorMessage)
     }
     
@@ -80,9 +80,9 @@ class LoginViewModel {
         
         delegate?.didStartLoading()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.delegate?.didStopLoading()
-            self.delegate?.didSucceedLogin()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            self?.delegate?.didStopLoading()
+            self?.delegate?.didSucceedLogin()
         }
     }
     
@@ -91,22 +91,22 @@ class LoginViewModel {
         validatePassword()
         
         if email.isEmpty {
-            delegate?.didFailWithError("Email is required")
+            delegate?.didFailWithError(StringConstants.ErrorMessages.emailRequired)
             return false
         }
         
         if !isEmailValid {
-            delegate?.didFailWithError("Please enter a valid email")
+            delegate?.didFailWithError(StringConstants.ErrorMessages.invalidEmail)
             return false
         }
         
         if password.isEmpty {
-            delegate?.didFailWithError("Password is required")
+            delegate?.didFailWithError(StringConstants.ErrorMessages.passwordRequired)
             return false
         }
         
         if !isPasswordValid {
-            delegate?.didFailWithError("Password must include uppercase, lowercase, number, and special character")
+            delegate?.didFailWithError(StringConstants.ErrorMessages.invalidPassword)
             return false
         }
         

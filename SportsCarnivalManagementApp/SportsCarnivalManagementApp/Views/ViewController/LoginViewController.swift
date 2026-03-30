@@ -21,8 +21,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     private var viewModel = LoginViewModel()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.setNavigationBarHidden(true, animated: false)
         setupViewModel()
         setupUI()
     }
@@ -38,6 +44,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         setupTrophyIcon()
         setupLoadingIndicator()
         setupErrorLabels()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func setupContainerView() {
@@ -71,7 +80,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         let placeholderColor = UIColor(named: "InputText") ?? .gray
         emailTextField.attributedPlaceholder = NSAttributedString(
-            string: "Enter your email",
+            string: StringConstants.placeholders.email,
             attributes: [
                 .foregroundColor: placeholderColor
             ]
@@ -90,7 +99,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         let placeholderColor = UIColor(named: "InputText") ?? .gray
         passwordTextField.attributedPlaceholder = NSAttributedString(
-            string: "Enter your password",
+            string: StringConstants.placeholders.password,
             attributes: [
                 .foregroundColor: placeholderColor
             ]
@@ -121,6 +130,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func onClickSignInButton(_ sender: UIButton) {
+        clearAllFieldErrors()
         viewModel.login()
     }
     
@@ -130,13 +140,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @objc private func emailTextFieldDidChange() {
         viewModel.email = emailTextField.text ?? ""
-        emailErrorText.isHidden = true
         clearFieldErrors(textField: emailTextField)
     }
     
     @objc private func passwordTextFieldDidChange() {
         viewModel.password = passwordTextField.text ?? ""
-        passwordErrorText.isHidden = true
         clearFieldErrors(textField: passwordTextField)
     }
     
@@ -195,7 +203,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func navigateToMainApp() {
-        let alert = UIAlertController(title: "Success", message: "Login Successful!", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Success", message: StringConstants.sucessMessages.loginSuccess, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default))
         present(alert, animated: true)
     }

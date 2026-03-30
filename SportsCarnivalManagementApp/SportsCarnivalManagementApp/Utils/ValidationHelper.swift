@@ -5,7 +5,7 @@
 //  Created by Himani Jangid on 20/03/26.
 //
 
-import UIKit
+import Foundation
 
 class ValidationHelper {
     static func isValidEmail(_ email: String) -> Bool {
@@ -21,6 +21,8 @@ class ValidationHelper {
     }
         
     static func isValidName(_ name: String) -> Bool {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        guard trimmed.count >= 2 else { return false }
         let nameRegex = "^[A-Za-z\\s]+$"
         let predicate = NSPredicate(format: "SELF MATCHES %@", nameRegex)
         return predicate.evaluate(with: name)

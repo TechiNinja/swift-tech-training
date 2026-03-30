@@ -25,6 +25,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesBackButton = true
         setupViewModel()
         setupUI()
     }
@@ -40,6 +41,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         setupTrophyIcon()
         setupLoadingIndicator()
         setupErrorLabels()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func setupContainerView() {
@@ -73,7 +77,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
         let placeholderColor = UIColor(named: "InputText") ?? .gray
         nameTextField.attributedPlaceholder = NSAttributedString(
-            string: "Enter your full name",
+            string: StringConstants.placeholders.name,
             attributes: [
                 .foregroundColor: placeholderColor
             ]
@@ -92,7 +96,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
         let placeholderColor = UIColor(named: "InputText") ?? .gray
         registerEmailTextField.attributedPlaceholder = NSAttributedString(
-            string: "Enter your email",
+            string: StringConstants.placeholders.email,
             attributes: [
                 .foregroundColor: placeholderColor
             ]
@@ -110,7 +114,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
         let placeholderColor = UIColor(named: "InputText") ?? .gray
         registerPasswordTextField.attributedPlaceholder = NSAttributedString(
-            string: "Enter your password",
+            string: StringConstants.placeholders.password,
             attributes: [
                 .foregroundColor: placeholderColor
             ]
@@ -146,7 +150,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         viewModel.register()
     }
     @IBAction func onClickSignInButton(_ sender: UIButton) {
-        navigatetoLogin()
+        navigateToLogin()
     }
     
     @objc private func nameTextFieldDidChange() {
@@ -194,7 +198,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    private func showFieldError(textField: UITextField, message: String) {
+    private func showFieldError(textField: UITextField) {
         textField.layer.borderColor = UIColor(named: "Error")?.cgColor
     }
     
@@ -208,12 +212,12 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         present(alert, animated: true)
     }
     
-    private func navigatetoLogin() {
+    private func navigateToLogin() {
         navigationController?.popViewController(animated: true)
     }
     
     private func showSuccessAndNavigateToLogin() {
-        let alert = UIAlertController(title: "Success", message: "Account created successfully!", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Success", message: StringConstants.sucessMessages.accountCreated, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default) { _ in
             self.navigationController?.popViewController(animated: true)
         })
@@ -246,7 +250,7 @@ extension RegisterViewController: RegisterViewModelDelegate {
         if let error = error {
             nameErrorText.text = error
             nameErrorText.isHidden = false
-            showFieldError(textField: nameTextField, message: error)
+            showFieldError(textField: nameTextField)
         } else {
             nameErrorText.isHidden = true
             clearFieldErrors(textField: nameTextField)
@@ -257,7 +261,7 @@ extension RegisterViewController: RegisterViewModelDelegate {
         if let error = error {
             emailErrorText.text = error
             emailErrorText.isHidden = false
-            showFieldError(textField: registerEmailTextField, message: error)
+            showFieldError(textField: registerEmailTextField)
         } else {
             emailErrorText.isHidden = true
             clearFieldErrors(textField: registerEmailTextField)
@@ -268,7 +272,7 @@ extension RegisterViewController: RegisterViewModelDelegate {
         if let error = error {
             passwordErrorText.text = error
             passwordErrorText.isHidden = false
-            showFieldError(textField: registerPasswordTextField, message: error)
+            showFieldError(textField: registerPasswordTextField)
         } else {
             passwordErrorText.isHidden = true
             clearFieldErrors(textField: registerPasswordTextField)
