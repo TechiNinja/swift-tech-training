@@ -41,15 +41,21 @@ final class AuthStorage {
         return try? JSONDecoder().decode(StoredUser.self, from: data)
     }
     
-    func deleteUser() {
+    func deleteUser() -> Bool {
         UserDefaults.standard.removeObject(forKey: AuthStorageKeys.user)
+        return UserDefaults.standard.data(forKey: AuthStorageKeys.user) == nil
     }
     
     func clearSession() {
-        let isDeleted = deleteToken()
-            if !isDeleted {
-                print("Token delete failed")
-            }
-        deleteUser()
+        let isTokenDeleted = deleteToken()
+        let isUserDeleted = deleteUser()
+        
+        if !isTokenDeleted {
+            print(StringConstants.ErrorMessages.tokenDeleteFailed)
+        }
+        
+        if !isUserDeleted {
+            print(StringConstants.ErrorMessages.userDeleteFailed)
+        }
     }
 }

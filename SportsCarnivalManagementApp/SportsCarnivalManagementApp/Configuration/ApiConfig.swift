@@ -9,7 +9,11 @@
 import Foundation
 
 enum APIConfig {
-    static let host = "localhost"
+    #if DEBUG
+    static let host = "127.0.0.1"
+    #else
+    static let host = "your-production-host.com"
+    #endif
     static let baseURL = "http://\(host):5000/api"
 }
 

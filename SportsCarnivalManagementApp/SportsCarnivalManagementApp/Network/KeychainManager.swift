@@ -23,7 +23,7 @@ final class KeychainManager {
             kSecAttrAccount as String: key,
             kSecValueData as String: data
         ]
-        
+            
         SecItemDelete(query as CFDictionary)
         let status = SecItemAdd(query as CFDictionary, nil)
         
